@@ -1,10 +1,21 @@
-use actix_web::{Responder, HttpResponse, post, get};
+mod todo;
+
+use std::path::PathBuf;
+
+use actix_web::{web, Responder, HttpResponse, HttpRequest, post, get, Result};
+use actix_files::NamedFile;
+
+pub async fn index(req: HttpRequest) -> Result<NamedFile> {
+    let path: PathBuf = req.match_info().query("page").parse().unwrap();
+    Ok(NamedFile::open(path)?)
+}
 
 /// This function create a todo.
 /// The response is result of create.
 #[post("/todo/create")]
-pub async fn create_todo(request: String) -> impl Responder {
-    HttpResponse::Ok().body(request)
+pub async fn create_todo(todo: web::Json<todo::ToDo>) -> Result<String> {
+    println!("{:?}", todo);
+    Ok(format!("todo: {:?}", todo))
 }
 
 /// This function show a todo.

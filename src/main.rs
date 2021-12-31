@@ -1,12 +1,13 @@
 mod handler;
 
-use actix_web::{App, HttpServer};
+use actix_web::{App, HttpServer, web};
 
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
+            .route("/{page:.*}", web::get().to(handler::index))
             .service(handler::create_todo)
             .service(handler::list_todo)
             .service(handler::update_todo)
