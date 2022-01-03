@@ -1,10 +1,10 @@
 use rusqlite::{Connection, Result, params};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct ToDo {
-    content: String,
-    finished: bool,
+    pub content: String,
+    pub finished: bool,
 }
 
 impl ToDo {
@@ -26,5 +26,5 @@ impl ToDo {
 
 
 fn connect_to_db() -> Result<Connection> {
-    Connection::open("./todolist.sqlite3")
+    Connection::open("./tododb.sqlite3")
 }

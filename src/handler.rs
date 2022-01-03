@@ -1,13 +1,16 @@
 mod todo;
 
 use actix_web::{web, post, get, Result};
+use self::todo::ToDo;
 
 /// This function create a todo.
 /// The response is result of create.
 #[post("/todo/create")]
-pub async fn create_todo(todo: web::Json<todo::ToDo>) -> Result<String> {
-    println!("{:?}", todo);
-    Ok(format!("todo: {:?}", todo))
+pub async fn create_todo(request: web::Json<todo::ToDo>) -> Result<String> {
+    println!("{:?}", request);
+    let new_todo = ToDo::new(String::from("new content"));
+    ToDo::write_to_db(&new_todo);
+    Ok(format!("todo: {:?}", new_todo))
 }
 
 /// This function show a todo.
