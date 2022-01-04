@@ -8,8 +8,12 @@ use self::todo::ToDo;
 #[post("/todo/create")]
 pub async fn create_todo(request: web::Json<todo::ToDo>) -> Result<String> {
     println!("{:?}", request);
-    let new_todo = ToDo::new(String::from("new content"));
-    ToDo::write_to_db(&new_todo);
+    let content = format!("{}", request.content);
+    let new_todo = ToDo::new(content);
+    match ToDo::write_to_db(&new_todo) {
+        Ok(()) => println!("ToDo insert successed."),
+        Err(e) => println!("ToDo insert failed. Detail:{}", e),
+    }
     Ok(format!("todo: {:?}", new_todo))
 }
 
