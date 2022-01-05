@@ -29,9 +29,16 @@ pub async fn list_todo() -> Result<String> {
 /// This function modify a todo.
 /// The response is result of update.
 #[post("/todo/update")]
-pub async fn update_todo(todo: web::Json<todo::ToDo>) -> Result<String> {
-    println!("{:?}", todo);
-    Ok(format!("todo: {:?}", todo))
+pub async fn update_todo(request: web::Json<todo::ToDo>) -> Result<String> {
+    println!("{:?}", request);
+    let content = format!("{}", request.content);
+    let finished = if request.finished {0} else {1};
+    let new_todo = ToDo::new(content);
+    match ToDo::write_to_db(&new_todo) {
+        Ok(()) => println!("ToDo update successed."),
+        Err(e) => println!("ToDo update failed. Detail:{}", e),
+    }
+    Ok(format!("todo: {:?}", new_todo))
 }
 
 
