@@ -10,7 +10,7 @@ pub async fn create_todo(request: web::Json<todo::ToDo>) -> Result<String> {
     println!("{:?}", request);
     let content = format!("{}", request.content);
     let new_todo = ToDo::new(content);
-    match ToDo::insert_db(&new_todo) {
+    match ToDo::insert_db(&new_todo.content, new_todo.finished) {
         Ok(()) => println!("ToDo insert successed."),
         Err(e) => println!("ToDo insert failed. Detail:{}", e),
     }
