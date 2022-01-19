@@ -30,6 +30,27 @@ impl ToDo {
         )?;
         Ok(())
     }
+
+    pub fn list_db() -> Result<Vec<ToDo>> {
+        let conn = connect_to_db()?;
+        let mut stmt = conn.prepare("SELECT * FROM todolist")?;
+        let res_iter = stmt.query_map([], |row| {
+            Ok(ToDo {
+                id: row.get(0)?,
+                content: row.get(1)?,
+                finished: row.get(2)?,
+            })
+        })?;
+
+        let mut todos = Vec::new();
+        for todo in res_iter {
+            match todo {
+                Ok(todo) => todos.push(todo),
+                Err(e) => panic!("{:?}", e),
+            }
+        }
+        Ok(todos)
+    }
 }
 
 fn connect_to_db() -> Result<Connection> {

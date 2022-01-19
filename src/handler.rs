@@ -22,7 +22,7 @@ pub async fn create_todo(request: web::Json<todo::ToDo>) -> Result<String> {
 #[get("/todo/list")]
 pub async fn list_todo() -> Result<String> {
     println!("GET /todo/lost");
-    let todos = todo::ToDo::new(String::from("new content"));
+    let todos = ToDo::list_db();
     Ok(format!("{:?}", todos))
 }
 
