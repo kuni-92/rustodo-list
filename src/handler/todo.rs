@@ -51,6 +51,15 @@ impl ToDo {
         }
         Ok(todos)
     }
+
+    pub fn delete_db(id: &i32) -> Result<()> {
+        let conn = connect_to_db()?;
+        conn.execute(
+            "DELETE FROM todolist WHERE id = ?1",
+            params![id]
+        )?;
+        Ok(())
+    }
 }
 
 fn connect_to_db() -> Result<Connection> {

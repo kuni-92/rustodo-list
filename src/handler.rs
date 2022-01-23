@@ -21,7 +21,7 @@ pub async fn create_todo(request: web::Json<todo::ToDo>) -> Result<String> {
 /// The response is saved Todo.
 #[get("/todo/list")]
 pub async fn list_todo() -> Result<String> {
-    println!("GET /todo/lost");
+    println!("GET /todo/list");
     let todos  =  ToDo::list_db().unwrap();
     Ok(format!("{:?}", todos))
 }
@@ -43,6 +43,10 @@ pub async fn update_todo(request: web::Json<todo::ToDo>) -> Result<String> {
 /// The response is result of delete.
 #[post("/todo/delete")]
 pub async fn delete_todo(todo: web::Json<todo::ToDo>) -> Result<String> {
-    println!("{:?}", todo);
-    Ok(format!("todo: {:?}", todo))
+    println!("DELETE todo/delete");
+    match ToDo::delete_db(&todo.id) {
+        Ok(()) => println!("ToDo delete successed."),
+        Err(e) => println!("ToDo delete failed. Detail:{}", e),
+    }
+    Ok(format!("delete todo, id: {}", todo.id))
 }
